@@ -55,7 +55,12 @@ app.use(
   graphqlHttp({
     schema: graphqlSchema,
     rootValue: graphqlResolver,
-    graphiql: true
+    graphiql: true,
+    customFormatErrorFn: error => ({
+      message: error.message || 'An error occurred',
+      code: error.originalError.code || 500,
+      data: error.originalError.data
+    })
   })
 );
 
