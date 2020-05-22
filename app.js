@@ -14,7 +14,6 @@ const graphqlResolver = require('./graphql/resolvers');
 const auth = require('./middleware/auth')
 const { clearImage } = require('./util/file');
 
-app.use(cors());
 const app = express()
 const PORT = process.env.PORT || 8000;
 
@@ -59,6 +58,7 @@ app.use((req, res, next) => {
 })
 
 app.use(auth)
+app.use(cors())
 
 app.put('/post-image', (req, res, next) => {
   if (!req.isAuth) {
