@@ -1,5 +1,5 @@
 // CodePen RestAPI-Cors !!!
-// const cors = require('cors');
+const cors = require('cors');
 require('dotenv').config();
 
 const express = require('express')
@@ -14,7 +14,7 @@ const graphqlResolver = require('./graphql/resolvers');
 const auth = require('./middleware/auth')
 const { clearImage } = require('./util/file');
 
-// app.use(cors());
+app.use(cors());
 const app = express()
 const PORT = process.env.PORT || 8000;
 
