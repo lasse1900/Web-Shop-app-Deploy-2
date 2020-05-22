@@ -1,4 +1,5 @@
 // CodePen RestAPI-Cors !!!
+const cors = require('cors');
 require('dotenv').config();
 const path = require('path')
 
@@ -7,13 +8,16 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const multer = require('multer')
 const graphqlHttp = require('express-graphql');
+const path = require('path');
 
 const graphqlSchema = require('./graphql/schema');
 const graphqlResolver = require('./graphql/resolvers');
 const auth = require('./middleware/auth')
 const { clearImage } = require('./util/file');
 
+app.use(cors());
 const app = express()
+const PORT = process.env.PORT || 8000;
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -92,10 +96,16 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, data: data })
 })
 
+app.use(express.static('build'));
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+});
+
 mongoose.connect(MONGODB_URI,
   { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true })
-  .then(result => {
-    console.log('listening at port 8080')
-    app.listen(8080)
+  .then(() => {
+    app.listen(PORT, () => console.log(`Server started at port ${PORT}`));
   })
-  .catch(err => console.log(err))
+  .catch(err => {
+    console.log(err)
+  })
